@@ -26,7 +26,7 @@ public:
 	}
 };
 
-int map[BLOCK_WIDTH][BLOCK_HEIGHT];
+int map[BLOCK_WIDTH][BLOCK_HEIGHT];//0代表空气，1代表墙壁，3代表选中路点（但是并没有用到）
 vector<block*> openlist;//待选列表,此列表记录所有的路
 
 vector<block*> list;//临时的列表
