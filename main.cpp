@@ -16,6 +16,9 @@ const int BLOCK_HEIGHT = HEIGHT / (BLOCK_XY);//小方格y轴数量
 #define qiangbi COLORREF RGB(50,50,50)//墙壁颜色
 #define xuanzhong COLORREF RGB(255,0,0)//选中颜色
 
+#define ROAD 0//路（空气）
+#define WALL 1//墙壁
+
 struct block{
 public:
 	int x;
@@ -47,11 +50,11 @@ bool init() {
 	/*地图初始化为墙*/
 	for (int y = 0; y < BLOCK_HEIGHT; y++) {
 		for (int x = 0; x < BLOCK_WIDTH; x++) {
-			map[x][y] = 1;
+			map[x][y] = WALL;
 		}
 	}
 	/*随机选一个路点，将它变成路*/
-	map[40][40] = 0;
+	map[40][40] = ROAD;
 	/*将该点加入待选列表*/
 	block* s = new block(40, 40);
 	openlist.push_back(s);
@@ -81,28 +84,28 @@ void through(int x, int y) {
 	list.clear();
 	list2.clear();
 	//上
-	if (y - 2 >= 0 && map[x][y - 2] == 1) {
+	if (y - 2 >= 0 && map[x][y - 2] == WALL) {
 		block* a = new block(x, y - 1);
 		block* aa = new block(x, y - 2);
 		list.push_back(a);
 		list2.push_back(aa);
 	}
 	//下
-	if (y + 2 <= BLOCK_HEIGHT - 1 && map[x][y + 2] == 1) {
+	if (y + 2 <= BLOCK_HEIGHT - 1 && map[x][y + 2] == WALL) {
 		block* b = new block(x, y + 1);
 		block* bb = new block(x, y + 2);
 		list.push_back(b);
 		list2.push_back(bb);
 	}
 	//左
-	if (x - 2 >= 0 && map[x - 2][y] == 1) {
+	if (x - 2 >= 0 && map[x - 2][y] == WALL) {
 		block* c = new block(x - 1, y);
 		block* cc = new block(x - 2, y);
 		list.push_back(c);
 		list2.push_back(cc);
 	}
 	//右
-	if (x + 2 <= BLOCK_WIDTH - 1 && map[x + 2][y] == 1) {
+	if (x + 2 <= BLOCK_WIDTH - 1 && map[x + 2][y] == WALL) {
 		block* d = new block(x + 1, y);
 		block* dd = new block(x + 2, y);
 		list.push_back(d);
@@ -113,9 +116,9 @@ void through(int x, int y) {
 		block* B = list[BIndexea];
 		block* BB = list2[BIndexea];
 		/*将x，y与B打通*/
-		map[B->x][B->y] = 0;
+		map[B->x][B->y] = ROAD;
 		/*将选中路点变为路，并加入待选列表*/
-		map[BB->x][BB->y] = 0;
+		map[BB->x][BB->y] = ROAD;
 		openlist.push_back(BB);
 
 	}
@@ -123,19 +126,19 @@ void through(int x, int y) {
 bool check(int x, int y) {
 	bool temp = 0;
 	//上
-	if (y - 2 >= 0 && map[x][y - 2] == 1) {
+	if (y - 2 >= 0 && map[x][y - 2] == WALL) {
 		temp = 1;
 	}
 	//下
-	if (y + 2 <= BLOCK_HEIGHT - 1 && map[x][y + 2] == 1) {
+	if (y + 2 <= BLOCK_HEIGHT - 1 && map[x][y + 2] == WALL) {
 		temp = 1;
 	}
 	//左
-	if (x - 2 >= 0 && map[x - 2][y] == 1) {
+	if (x - 2 >= 0 && map[x - 2][y] == WALL) {
 		temp = 1;
 	}
 	//右
-	if (x + 2 <= BLOCK_WIDTH - 1 && map[x + 2][y] == 1) {
+	if (x + 2 <= BLOCK_WIDTH - 1 && map[x + 2][y] == WALL) {
 		temp = 1;
 	}
 	return temp;
@@ -143,10 +146,10 @@ bool check(int x, int y) {
 void display() {
 	for (int y = 0; y < BLOCK_HEIGHT; y++) {
 		for (int x = 0; x < BLOCK_WIDTH; x++) {
-			if (map[x][y] == 1) {
+			if (map[x][y] == WALL) {
 				gamedrawpixal(x, y, qiangbi);
 			}
-			else if (map[x][y] == 0) {
+			else if (map[x][y] == ROAD) {
 				gamedrawpixal(x, y, kongqi);
 			}
 		}
